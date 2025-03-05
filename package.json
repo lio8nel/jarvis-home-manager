@@ -1,0 +1,11 @@
+{
+    "name": "jarvis-home-manager",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "dev": "npm run dev --workspace=web",
+        "api": "npm run dev --workspace=api"
+    }
+}
