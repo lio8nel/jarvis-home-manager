@@ -20,6 +20,24 @@ async function getDevices(): Promise<Device[]> {
   return res.json();
 }
 
+// Add this function to toggle device state
+async function toggleDevice(id: number, currentStatus: string) {
+  const newStatus = currentStatus === "on" ? "off" : "on";
+  const res = await fetch(`http://localhost:3001/api/devices/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ status: newStatus }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to toggle device");
+  }
+
+  return res.json();
+}
+
 export default async function Home() {
   const devices = await getDevices();
 
@@ -33,7 +51,11 @@ export default async function Home() {
           {devices.map((device) => (
             <div
               key={device.id}
-              className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
+              className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow cursor-pointer"
+              onClick={async () => {
+                "use server";
+                await toggleDevice(device.id, device.status);
+              }}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">

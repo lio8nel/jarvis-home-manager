@@ -48,4 +48,24 @@ app.get('/api/devices', async (req, res) => {
   }
 });
 
+// PATCH endpoint for device control
+app.patch('/api/devices/:id', async (req, res) => {
+  try {
+    const deviceId = parseInt(req.params.id);
+    const { status } = req.body;
+    
+    if (status !== 'on' && status !== 'off') {
+      return res.status(400).json({ error: 'Status must be "on" or "off"' });
+    }
+
+    const hueApi = await connectToBridge();
+    await hueApi.lights.setLightState(deviceId, { on: status === 'on' });
+    
+    res.json({ id: deviceId, status });
+  } catch (err) {
+    console.error('Error controlling light:', err);
+    res.status(500).json({ error: 'Failed to control device' });
+  }
+});
+
 module.exports = app; 
