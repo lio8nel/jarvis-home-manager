@@ -1,45 +1,18 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { DeviceIcon } from "../components/DeviceIcon";
 
-// Add this type definition
-type Device = {
-  id: number;
-  name: string;
-  type: string;
-  status: string;
-};
+import { Device, getDevices, toggleDevice } from "./client/client";
 
-async function getDevices(): Promise<Device[]> {
-  const res = await fetch("http://localhost:3001/api/devices", {
-    next: { revalidate: 30 }, // Revalidate every 30 seconds
+export default function Home() {
+  //const devices = await getDevices();
+  const [devices, setDevices] = useState<Device[]>([]);
+  useEffect(() => {
+    getDevices().then((devices) => {
+      setDevices(devices);
+    });
   });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch devices");
-  }
-
-  return res.json();
-}
-
-// Add this function to toggle device state
-async function toggleDevice(id: number, currentStatus: string) {
-  const newStatus = currentStatus === "on" ? "off" : "on";
-  const res = await fetch(`http://localhost:3001/api/devices/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ status: newStatus }),
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to toggle device");
-  }
-
-  return res.json();
-}
-
-export default async function Home() {
-  const devices = await getDevices();
 
   return (
     <div className="min-h-screen p-8">
@@ -48,12 +21,11 @@ export default async function Home() {
 
         {/* Grid of device tiles */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {devices.map((device) => (
+          {devices.map((device: Device) => (
             <div
               key={device.id}
               className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow cursor-pointer"
               onClick={async () => {
-                "use server";
                 await toggleDevice(device.id, device.status);
               }}
             >
