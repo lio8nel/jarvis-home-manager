@@ -9,7 +9,7 @@ async function getDevices(): Promise<Device[]> {
   const res = await fetch("http://localhost:3001/api/devices", {
     next: { revalidate: 30 }, // Revalidate every 30 seconds
   });
-
+  console.log("getDevices");
   if (!res.ok) {
     throw new Error("Failed to fetch devices");
   }

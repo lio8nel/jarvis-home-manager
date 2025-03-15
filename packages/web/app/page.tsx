@@ -1,18 +1,10 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { DeviceIcon } from "../components/DeviceIcon";
+import { revalidatePath } from "next/cache";
 
 import { Device, getDevices, toggleDevice } from "./client/client";
 
-export default function Home() {
-  //const devices = await getDevices();
-  const [devices, setDevices] = useState<Device[]>([]);
-  useEffect(() => {
-    getDevices().then((devices) => {
-      setDevices(devices);
-    });
-  });
+export default async function Home() {
+  const devices = await getDevices();
 
   return (
     <div className="min-h-screen p-8">
@@ -26,7 +18,9 @@ export default function Home() {
               key={device.id}
               className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow cursor-pointer"
               onClick={async () => {
+                "use server";
                 await toggleDevice(device.id, device.status);
+                revalidatePath("/");
               }}
             >
               <div className="flex items-center justify-between">
