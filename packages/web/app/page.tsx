@@ -1,7 +1,7 @@
 import { DeviceIcon } from "../components/DeviceIcon";
 import { revalidatePath } from "next/cache";
 
-import { Device, getDevices, toggleDevice } from "./client/client";
+import { Device, getDevices, toggleDevice } from "./core/device";
 
 export default async function Home() {
   const devices = await getDevices();
