@@ -9,8 +9,8 @@ app.use(cors());
 app.use(express.json());
 
 // Configuration for Hue Bridge
-const BRIDGE_USER = process.env.HUE_USER; // You'll need to set this
-const BRIDGE_IP = process.env.HUE_BRIDGE_IP; // You'll need to set this
+const BRIDGE_USER = process.env.HUE_USER;
+const BRIDGE_IP = process.env.HUE_BRIDGE_IP;
 
 // Function to connect to the Hue Bridge
 async function connectToBridge() {
@@ -27,13 +27,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// GET endpoint for devices
 app.get('/api/devices', async (req, res) => {
   try {
     const hueApi = await connectToBridge();
     const lights = await hueApi.lights.getAll();
     
-    // Transform Hue lights into our device format
     const devices = lights.map(light => ({
       id: light.id,
       name: light.name,
@@ -48,7 +46,6 @@ app.get('/api/devices', async (req, res) => {
   }
 });
 
-// PATCH endpoint for device control
 app.patch('/api/devices/:id', async (req, res) => {
   try {
     const deviceId = parseInt(req.params.id);
