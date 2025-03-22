@@ -28,7 +28,7 @@ HUE_USER=<your_hue_user>
 
 ## npm scripts
 
-```
+```bash
 # start the dev server for the frontend app
 npm run "web:dev"
 # start the API server
