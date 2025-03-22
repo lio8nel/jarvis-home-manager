@@ -1,7 +1,12 @@
-import { DeviceIcon } from "../components/DeviceIcon";
+import { DeviceTile } from "../components/Device";
+import { getDevices, toggleDevice } from "./core/device";
 import { revalidatePath } from "next/cache";
 
-import { Device, getDevices, toggleDevice } from "./core/device";
+async function handleToggle(deviceId: number, status: string) {
+  "use server";
+  await toggleDevice(deviceId, status);
+  revalidatePath("/");
+}
 
 export default async function Home() {
   const devices = await getDevices();
@@ -11,34 +16,13 @@ export default async function Home() {
       <main>
         <h1 className="text-2xl font-bold mb-6">My Home Devices</h1>
 
-        {/* Grid of device tiles */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {devices.map((device: Device) => (
-            <div
+          {devices.map((device) => (
+            <DeviceTile
               key={device.id}
-              className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow cursor-pointer"
-              onClick={async () => {
-                "use server";
-                await toggleDevice(device.id, device.status);
-                revalidatePath("/");
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <DeviceIcon
-                    type={device.type}
-                    className="text-gray-600 dark:text-gray-400"
-                  />
-                  <h2 className="font-semibold">{device.name}</h2>
-                </div>
-                <span
-                  className={`inline-block w-2 h-2 rounded-full ${
-                    device.status === "on" ? "bg-green-500" : "bg-gray-400"
-                  }`}
-                />
-              </div>
-              <p className="text-sm text-gray-500 mt-2">{device.type}</p>
-            </div>
+              device={device}
+              toggleAction={handleToggle}
+            />
           ))}
         </div>
       </main>
