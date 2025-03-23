@@ -5,8 +5,11 @@ type Device = {
   status: string;
 };
 
+const apiHost = process.env.API_HOST || "localhost";
+const apiUrl = `http://${apiHost}:3001/api`;
+
 async function getDevices(): Promise<Device[]> {
-  const res = await fetch("http://localhost:3001/api/devices", {
+  const res = await fetch(`${apiUrl}/devices`, {
     next: { revalidate: 30 }, // Revalidate every 30 seconds
   });
   console.log("getDevices");
@@ -20,7 +23,7 @@ async function getDevices(): Promise<Device[]> {
 // Add this function to toggle device state
 async function toggleDevice(id: number, currentStatus: string) {
   const newStatus = currentStatus === "on" ? "off" : "on";
-  const res = await fetch(`http://localhost:3001/api/devices/${id}`, {
+  const res = await fetch(`${apiUrl}/devices/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

@@ -1,7 +1,7 @@
 FROM node:18-slim
 
 WORKDIR /app
-COPY . .
+COPY ./packages/api .
 RUN npm install
 EXPOSE 3001
 
