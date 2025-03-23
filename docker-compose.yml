@@ -8,8 +8,8 @@ services:
       - "3001:3001"
     environment:
       - PORT=3001
-      - HUE_BRIDGE_IP=${HUE_BRIDGE_IP}
-      - HUE_USER=${HUE_USER}
+      - HUE_BRIDGE_IP=${HUE_BRIDGE_IP:-localhost}
+      - HUE_USER=${HUE_USER:-empty}
 
   web:
     image: lionel38190/jarvisweb:${VERSION_TAG:-latest}
