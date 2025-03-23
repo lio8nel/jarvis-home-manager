@@ -25,6 +25,9 @@ jobs:
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
       
       - name: Build and push images with docker-compose
+        uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: docker-compose.yml
         env:
           VERSION_TAG: ${{ steps.get_version.outputs.VERSION }}
         run: |
