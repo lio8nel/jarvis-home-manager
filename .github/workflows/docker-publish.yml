@@ -32,9 +32,16 @@ jobs:
             docker-compose --version
         continue-on-error: false  
             
-      - name: Build and push images with docker-compose
+      - name: Build and push ${{ github.event.release.tag_name }}
         env:
           VERSION_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          docker-compose build
+          docker-compose push
+
+      - name: Build and push latest
+        env:
+          VERSION_TAG: latest
         run: |
           docker-compose build
           docker-compose push
