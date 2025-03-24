@@ -7,6 +7,7 @@ async function handleToggle(deviceId: number, status: string) {
   await toggleDevice(deviceId, status);
   revalidatePath("/");
 }
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const devices = await getDevices();
