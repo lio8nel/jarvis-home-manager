@@ -1,3 +1,9 @@
+## 0.1.1 (2025-03-24)
+
+### Fix
+
+- **packages/web**: don't pre-render data
+
 ## 0.1.0 (2025-03-24)
 
 ### Feat
