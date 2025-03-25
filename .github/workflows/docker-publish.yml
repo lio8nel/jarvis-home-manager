@@ -19,29 +19,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Install Docker
-        run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sudo sh get-docker.sh
-        continue-on-error: false
-
-      - name: Install Docker Compose
-        run: |
-            sudo curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
-            docker-compose --version
-        continue-on-error: false  
-            
       - name: Build and push ${{ github.event.release.tag_name }}
         env:
           VERSION_TAG: ${{ github.event.release.tag_name }}
         run: |
-          docker-compose build --platform linux/amd64,linux/arm64/v8 
-          docker-compose push
-
-      - name: Build and push latest
-        env:
-          VERSION_TAG: latest
-        run: |
-          docker-compose build --platform linux/amd64,linux/arm64/v8 
-          docker-compose push
+          ./build-push-images.sh $VERSION_TAG
