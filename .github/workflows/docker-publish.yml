@@ -36,12 +36,12 @@ jobs:
         env:
           VERSION_TAG: ${{ github.event.release.tag_name }}
         run: |
-          docker-compose build
+          docker-compose build --platform linux/amd64,linux/arm64/v8 
           docker-compose push
 
       - name: Build and push latest
         env:
           VERSION_TAG: latest
         run: |
-          docker-compose build
+          docker-compose build --platform linux/amd64,linux/arm64/v8 
           docker-compose push
